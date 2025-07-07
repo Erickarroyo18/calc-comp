@@ -1,6 +1,6 @@
-# Lenguajes Recursivos: Evaluación *Call-by-Name* y *Call-by-Value*
+# Lenguajes Recursivos: Estrategias *Call-by-Name* y *Call-by-Value*
 
-Este directorio contiene dos extensiones del lenguaje funcional base con soporte para recursión explícita. Cada variante implementa un régimen de evaluación distinto: **evaluación perezosa** (*Call-by-Name*) y **evaluación ansiosa** (*Call-by-Value*). Ambas versiones comparten una gramática concreta común y una interfaz sintáctica unificada, diferenciándose únicamente en la semántica operativa subyacente.
+Este directorio contiene dos extensiones del lenguaje funcional base con soporte para recursión explícita. Cada variante implementa un régimen de evaluación distinto: **evaluación perezosa** con estrategia de paso de parámetro por nombre (*Call-by-Name*) y **evaluación ansiosa** con paso por valor (*Call-by-Value*). Ambas versiones comparten una gramática concreta común y una interfaz sintáctica unificada, diferenciándose únicamente en la semántica operativa subyacente.
 
 ---
 
@@ -68,13 +68,19 @@ happy Grammars.y
 cd cbn
 ghci LambdaCBName.hs
 ```
-
+Opcionalmente usar el comando:
+````
+ghci -package array LambdaCBName.hs 
+````
 - *Aλanis* (evaluación ansiosa):
 ```bash
 cd cbv
 ghci LambdaCBValue.hs
 ```
-
+Opcionalmente usar el comando:
+````
+ghci -package array LambdaCBValue.hs
+````
 3. Evaluar un programa:
 ```haskell
 ghci> run "(Rec fact (Lambda n (if (= n 0) 1 (* n (fact (- n 1))))) (fact 5))"

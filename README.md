@@ -1,65 +1,65 @@
 # Cálculo de Compiladores Correctos
 
-Este repositorio contiene la implementación de los resultados y casos de estudio presentados en el trabajo escrito sobre el **Cálculo de Compiladores Correctos: Del Régimen Estricto al Perezoso**, siguiendo la metodología desarrollada por **Patrick Bahr** y **Graham Hutton** en su artículo *Calculating Correct Compilers* (JFP, 2015). El proyecto abarca una serie de lenguajes de programación funcionales, desde versiones simples hasta lenguajes extendidos con características como la recursión explícita y distintas estrategias de evaluación, todo ello con un enfoque en la corrección formal de los compiladores y las máquinas virtuales generadas.
+Este repositorio contiene la implementación de los resultados y casos de estudio presentados en el trabajo **Cálculo de Compiladores Correctos: Del Régimen Estricto al Perezoso**, siguiendo la metodología propuesta por **Patrick Bahr** y **Graham Hutton** en su artículo *Calculating Correct Compilers* (JFP, 2015).  
+El proyecto abarca una serie de lenguajes funcionales, desde versiones básicas hasta extensiones con recursión explícita y distintas estrategias de evaluación, haciendo énfasis en la **corrección formal** de los compiladores y las máquinas virtuales generadas.
 
 ---
 
-## Objetivo del Repositorio
+## Objetivo del repositorio
 
-El objetivo principal de este repositorio es proporcionar una **implementación práctica** y **verificable** de los compiladores correctos definidos en el trabajo escrito. A lo largo de este repositorio, se implementan lenguajes de programación y sus correspondientes compiladores, aplicando el **cálculo de compiladores correctos** tal como se describe en la metodología de Bahr y Hutton. Cada caso de estudio se deriva de la especificación semántica formal de un lenguaje, pasando por un proceso de **desazucarado** (simplificación de la sintaxis) y **compilación** hasta llegar a una **máquina virtual**.
+El propósito principal de este repositorio es ofrecer una **implementación práctica y verificable** de compiladores correctos, derivados directamente de las definiciones semánticas de los lenguajes. Se aplican los principios del cálculo de compiladores correctos para desarrollar, a partir de una semántica formal, compiladores y máquinas virtuales que preservan dicha semántica.  
 
-Cada subdirectorio en este repositorio corresponde a un lenguaje distinto, o a una variante de un lenguaje que emplea un régimen de evaluación diferente. A continuación, se presenta una descripción general de la estructura del repositorio.
+Cada caso de estudio parte de una especificación del lenguaje fuente, seguido por un proceso de **desazucarado** (cuando es necesario) y **compilación**, culminando en una **máquina virtual** que ejecuta el código generado.
 
 ---
 
-## Estructura del Repositorio
+## Estructura del repositorio
 
-El repositorio se organiza en los siguientes directorios principales:
+El repositorio se organiza en los siguientes subdirectorios, cada uno correspondiente a un lenguaje específico o una variante con diferente régimen de evaluación:
 
 ### `eager/`
-Implementación del lenguaje **Aλanis** con régimen de evaluación **Call-by-Value** (evaluación ansiosa). Incluye los módulos que definen el evaluador, el compilador y la máquina virtual correspondientes.
+Lenguaje **Aλanis**, con evaluación ansiosa y paso de parámetros por valor (**Call-by-Value**). Incluye:
 
-- `Alanis.hs`: Implementación del lenguaje Aλanis.
-- `Eval.hs`: Evaluador semántico del lenguaje.
-- `README.md`: Documentación específica del subdirectorio.
+- `Alanis.hs`: Definición del lenguaje.
+- `Eval.hs`: Evaluador semántico.
+- `README.md`: Documentación específica.
 
 ### `lazy/`
-Implementación del lenguaje **Iris** con régimen de evaluación **Call-by-Name** (evaluación perezosa). Al igual que en el directorio anterior, se incluyen los módulos de evaluación, compilación y máquina virtual.
+Lenguaje **Iris**, con evaluación perezosa y paso de parámetros por nombre (**Call-by-Name**). Incluye:
 
-- `Iris.hs`: Implementación del lenguaje Iris.
-- `Eval.hs`: Evaluador semántico del lenguaje.
-- `README.md`: Documentación específica del subdirectorio.
+- `Iris.hs`: Definición del lenguaje.
+- `Eval.hs`: Evaluador semántico.
+- `README.md`: Documentación específica.
 
 ### `miniB/`
-Implementación del minilenguaje booleano **MiniB**, con soporte para evaluación directa, compilador y máquina virtual derivada.
+Minilenguaje booleano **MiniB**, con evaluación directa, compilador derivado y máquina virtual. Incluye:
 
-- `Eval.hs`: Evaluador semántico para expresiones booleanas.
-- `MiniB.hs`: Máquina virtual y compilador para MiniB.
-- `README.md`: Documentación específica del subdirectorio.
-- `extended/`: Extensión del lenguaje MiniB con sintaxis concreta y desazucarado lógico.
+- `MiniB.hs`: Definición de compilador y máquina virtual.
+- `Eval.hs`: Semántica directa.
+- `extended/`: Versión extendida con sintaxis concreta y desazucarado.
+- `README.md`: Documentación específica.
 
 ### `recursion/`
-Implementación de lenguajes funcionales extendidos con **recursión explícita**. Incluye dos variantes con distintos regímenes de evaluación: **Call-by-Name** (Iris) y **Call-by-Value** (Aλanis).
+Lenguajes extendidos con **recursión explícita**, disponibles en dos variantes según el régimen de evaluación:
 
-- `cbn/`: Implementación del lenguaje Iris con recursión explícita y evaluación perezosa.
-- `cbv/`: Implementación del lenguaje Aλanis con recursión explícita y evaluación ansiosa.
-- `README.md`: Documentación sobre los lenguajes recursivos y su implementación.
+- `cbn/`: Versión de **Iris** con operador *Y* y evaluación perezosa.
+- `cbv/`: Versión de **Aλanis** con operador *Z* y evaluación ansiosa.
+- `README.md`: Documentación detallada.
 
 ---
 
-## Enfoque de Cálculo de Compiladores Correctos
+## Enfoque del Cálculo de Compiladores Correctos
 
-A través de esta metodología, se desarrollan compiladores correctos por construcción, asegurando que las máquinas virtuales generadas mantengan la semántica del lenguaje fuente.
+La metodología aplicada en este repositorio permite derivar compiladores correctos **por construcción**, asegurando que las máquinas virtuales ejecutan el código compilado conforme a la semántica original del lenguaje fuente.
 
-El proceso de cálculo sigue los siguientes pasos:
+El proceso se divide en las siguientes etapas:
 
-1. **Especificación del Lenguaje Fuente**: Definición de la semántica del lenguaje mediante una gramática y una semántica operacional.
-2. **Desazucarado**: Eliminación de azúcar sintáctica, transformando las construcciones complejas del lenguaje en una forma más básica y manejable. Aunque opcional
-en terminos del método, es útil para la integración dey desarrollo más general de los compiladores derivados.
-3. **Compilación**: Desarrollo de un compilador que traduce las expresiones del lenguaje fuente a una representación intermedia, típicamente un conjunto de instrucciones para una máquina virtual.
-4. **Máquina Virtual**: Implementación de la máquina virtual que ejecuta el código compilado, evaluando las expresiones de acuerdo con la semántica definida.
+1. **Especificación del lenguaje**: Se definen las sintaxis concreta y abstracta mediante una gramática.
+2. **(Opcional) Desazucarado**: Las construcciones complejas o recursivas son traducidas a formas básicas utilizando transformaciones previas a la compilación. Aunque no es un paso esencial del método, facilita la implementación modular de lenguajes con sintaxis extendida.
+3. **Compilación**: Se traduce la sintaxis abstracta a una secuencia de instrucciones para una máquina virtual, respetando la semántica del lenguaje.
+4. **Máquina virtual**: Se implementa un intérprete que ejecuta el código compilado bajo el régimen de evaluación correspondiente.
 
-Cada subdirectorio sigue este esquema, implementando el lenguaje, su compilador y su máquina virtual de acuerdo con los principios establecidos en la tesis.
+Cada subdirectorio sigue esta estructura general, presentando de forma clara la semántica, compilador y máquina virtual del lenguaje considerado, en línea con los principios establecidos en el trabajo original.
 
 ---
 

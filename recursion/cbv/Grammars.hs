@@ -303,26 +303,26 @@ happyReduction_1 _  = notHappyAtAll
 happyReduce_2 = happySpecReduce_1  5 happyReduction_2
 happyReduction_2 (HappyTerminal (TokenNum happy_var_1))
 	 =  HappyAbsSyn5
-		 (NumE happy_var_1
+		 (NumS happy_var_1
 	)
 happyReduction_2 _  = notHappyAtAll 
 
 happyReduce_3 = happySpecReduce_1  5 happyReduction_3
 happyReduction_3 _
 	 =  HappyAbsSyn5
-		 (BooleanE True
+		 (BooleanS True
 	)
 
 happyReduce_4 = happySpecReduce_1  5 happyReduction_4
 happyReduction_4 _
 	 =  HappyAbsSyn5
-		 (BooleanE False
+		 (BooleanS False
 	)
 
 happyReduce_5 = happySpecReduce_1  5 happyReduction_5
 happyReduction_5 (HappyTerminal (TokenId happy_var_1))
 	 =  HappyAbsSyn5
-		 (VarE happy_var_1
+		 (VarS happy_var_1
 	)
 happyReduction_5 _  = notHappyAtAll 
 
@@ -333,7 +333,7 @@ happyReduction_6 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (FstE happy_var_3
+		 (FstS happy_var_3
 	) `HappyStk` happyRest
 
 happyReduce_7 = happyReduce 5 5 happyReduction_7
@@ -344,7 +344,7 @@ happyReduction_7 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (PairE happy_var_2 happy_var_4
+		 (PairS happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_8 = happyReduce 4 5 happyReduction_8
@@ -354,7 +354,7 @@ happyReduction_8 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (AppE happy_var_2 happy_var_3
+		 (AppS happy_var_2 happy_var_3
 	) `HappyStk` happyRest
 
 happyReduce_9 = happyReduce 6 5 happyReduction_9
@@ -366,7 +366,7 @@ happyReduction_9 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (IfE happy_var_3 happy_var_4 happy_var_5
+		 (IfS happy_var_3 happy_var_4 happy_var_5
 	) `HappyStk` happyRest
 
 happyReduce_10 = happyReduce 5 5 happyReduction_10
@@ -377,7 +377,7 @@ happyReduction_10 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (AddE happy_var_3 happy_var_4
+		 (AddS happy_var_3 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_11 = happyReduce 5 5 happyReduction_11
@@ -388,7 +388,7 @@ happyReduction_11 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (SubE happy_var_3 happy_var_4
+		 (SubS happy_var_3 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_12 = happyReduce 5 5 happyReduction_12
@@ -399,7 +399,7 @@ happyReduction_12 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (MulE happy_var_3 happy_var_4
+		 (MulS happy_var_3 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_13 = happyReduce 5 5 happyReduction_13
@@ -410,7 +410,7 @@ happyReduction_13 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (DivE happy_var_3 happy_var_4
+		 (DivS happy_var_3 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_14 = happyReduce 5 5 happyReduction_14
@@ -421,7 +421,7 @@ happyReduction_14 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (EqE happy_var_3 happy_var_4
+		 (EqS happy_var_3 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_15 = happyReduce 5 5 happyReduction_15
@@ -432,7 +432,7 @@ happyReduction_15 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (LambdaE happy_var_3 happy_var_4
+		 (LambdaS happy_var_3 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_16 = happyReduce 6 5 happyReduction_16
@@ -444,7 +444,7 @@ happyReduction_16 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (RecE happy_var_3 happy_var_4 happy_var_5
+		 (RecS happy_var_3 happy_var_4 happy_var_5
 	) `HappyStk` happyRest
 
 happyNewToken action sts stk [] =
@@ -507,21 +507,21 @@ happySeq = happyDontSeq
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
--- Definición de la estructura del AST
-data CST = NumE Int
-          | BooleanE Bool
-          | VarE String
-          | FstE CST
-          | PairE CST CST
-          | AppE CST CST
-          | IfE CST CST CST
-          | AddE CST CST
-          | SubE CST CST
-          | MulE CST CST
-          | DivE CST CST
-          | EqE CST CST
-          | LambdaE String CST
-          | RecE String CST CST
+-- Definición de la estructura del srcASA
+data ASAS = NumS Int
+          | BooleanS Bool
+          | VarS String
+          | FstS ASAS
+          | PairS ASAS ASAS
+          | AppS ASAS ASAS
+          | IfS ASAS ASAS ASAS
+          | AddS ASAS ASAS
+          | SubS ASAS ASAS
+          | MulS ASAS ASAS
+          | DivS ASAS ASAS
+          | EqS ASAS ASAS
+          | LambdaS String ASAS
+          | RecS String ASAS ASAS
           deriving(Show)
 
 data Token = TokenId String
@@ -544,21 +544,21 @@ data Token = TokenId String
 
 lexer :: String -> [Token]
 lexer [] = []
-lexer (' ' : xs) = lexer xs
-lexer ('(' : xs) = TokenPA : lexer xs
-lexer (')' : xs) = TokenPC : lexer xs
-lexer (',' : xs) = TokenComma : lexer xs
-lexer ('+' : xs) = TokenAdd : lexer xs
-lexer ('-' : xs) = TokenSub : lexer xs
-lexer ('*' : xs) = TokenMul : lexer xs
-lexer ('/' : xs) = TokenDiv : lexer xs
-lexer ('=' : xs) = TokenEq : lexer xs
-lexer ('f':'s':'t':xs) = TokenFst : lexer xs
-lexer ('i':'f':xs) = TokenIf : lexer xs
-lexer ('L':'a':'m':'b':'d':'a':xs) = TokenLambda : lexer xs
-lexer ('R':'e':'c':xs) = TokenRec : lexer xs
-lexer ('T':'r':'u':'e':xs) = TokenTrue : lexer xs
-lexer ('F':'a':'l':'s':'e':xs) = TokenFalse : lexer xs
+lexer (' ' : xs)                    = lexer xs
+lexer ('(' : xs)                    = TokenPA : lexer xs
+lexer (')' : xs)                    = TokenPC : lexer xs
+lexer (',' : xs)                    = TokenComma : lexer xs
+lexer ('+' : xs)                    = TokenAdd : lexer xs
+lexer ('-' : xs)                    = TokenSub : lexer xs
+lexer ('*' : xs)                    = TokenMul : lexer xs
+lexer ('/' : xs)                    = TokenDiv : lexer xs
+lexer ('=' : xs)                    = TokenEq : lexer xs
+lexer ('f':'s':'t':xs)              = TokenFst : lexer xs
+lexer ('i':'f':xs)                  = TokenIf : lexer xs
+lexer ('L':'a':'m':'b':'d':'a':xs)  = TokenLambda : lexer xs
+lexer ('R':'e':'c':xs)              = TokenRec : lexer xs
+lexer ('T':'r':'u':'e':xs)          = TokenTrue : lexer xs
+lexer ('F':'a':'l':'s':'e':xs)      = TokenFalse : lexer xs
 lexer (x:xs)
     | isDigit x = lexNum (x:xs)
     | isAlpha x = lexAlph (x:xs)

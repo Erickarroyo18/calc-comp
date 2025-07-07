@@ -2,18 +2,18 @@ module Eval where
 import Prelude hiding (lookup)
 
 data Expr = Num Int
-        | Boolean Bool
-        | Var String
-        | Add Expr Expr
-        | Sub Expr Expr
-        | Mul Expr Expr
-        | Div Expr Expr
-        | If Expr Expr Expr
-        | Eq Expr Expr
-        | Pair Expr Expr
-        | Fst Expr
-        | Lambda String Expr
-        | App Expr Expr deriving (Show, Eq)
+          | Boolean Bool
+          | Var String
+          | Add Expr Expr
+          | Sub Expr Expr
+          | Mul Expr Expr
+          | Div Expr Expr
+          | If Expr Expr Expr
+          | Eq Expr Expr
+          | Pair Expr Expr
+          | Fst Expr
+          | Lambda String Expr
+          | App Expr Expr deriving (Show, Eq)
 
 data Value = NumV Int 
            | BooleanV Bool 
@@ -35,11 +35,9 @@ data RTExpr = S Expr
 step :: Config -> Maybe Config
 step (S (Num n), env)      = Nothing
 step (S (Boolean b), env)  = Nothing
-step (E, env)              = Nothing
-step (S (Var x), env) = case lookup x env of
-                           Thunk e env'   -> Just (T e env', env)
-                           NumV n         -> Just (S (Num n), env)
-                           Closure lam d  -> Just (C lam d, env)
+step (S (Pair f s), env)   = Nothing
+step (S (Var x), env)      = case lookup x env of
+                                Thunk e env'   -> Just (T e env', env)
 -- Force ----------------------------------------------------------------- Force
 step (F (T expr env), oEnv) = case step (S expr, env) of
                               Just (S expr', env')      -> step (F (T expr' env'), oEnv)
@@ -51,7 +49,7 @@ step (S (Add (Num n) (Num m)), env) = Just (S (Num (n+m)), env)
 step (S (Add (Num n) e2), env) = case step (S e2, env) of
                                 Just (S e2', env')   -> Just (S (Add (Num n) e2'), env')
                                 Just (T e2' d, env') -> case step (F (T e2' d), env') of
-                                                        Just (S v, env'') -> Just  (S (Add (Num n) v), env)
+                                                        Just (S v, env'') -> Just  (S (Add (Num n) v), env'')
                                 Nothing              -> Nothing
 step (S (Add e1 e2), env) = case step (S e1, env) of
                             Just (S e1',env')    -> Just (S (Add e1' e2), env')
@@ -95,15 +93,13 @@ step (S (Div e1 e2), env) = case step (S e1, env) of
                             Just (T e1' d, env') -> case step (F (T e1' d), env') of
                                                     Just (S v, env'') -> Just (S (Div v e2), env'')
                             Nothing              -> Nothing
--- Pair ----------------------------------------------------------------- Pair
-step (S (Pair f s), env) = Nothing
 -- Fst ----------------------------------------------------------------- Fst
 step (S (Fst p), env) = case p of
                         Pair f s -> Just (T f env, env)
                         _        -> case step (S p, env) of
-                                    Just (S p', env')   -> Just (S (Fst p'), env)
-                                    Just (T p' d, env') -> case step (F (T p' d), env) of
-                                                          Just (S v, env'') -> Just (S (Fst v), env)
+                                    Just (S p', env')   -> Just (S (Fst p'), env')
+                                    Just (T p' d, env') -> case step (F (T p' d), env') of
+                                                          Just (S v, env'') -> Just (S (Fst v), env'')
                                     Nothing             -> Nothing
 -- Eq ----------------------------------------------------------------- Eq
 step (S (Eq (Num n) (Num m)), env) = Just (S (Boolean (n==m)), env)
@@ -118,7 +114,7 @@ step (S (Eq e1 e2), env) = case step (S e1, env) of
                                                     Just (S v, env'') -> Just (S (Eq v e2), env'')
                             Nothing              -> Nothing
 -- If ----------------------------------------------------------------- If
-step (S (If (Boolean True) t e), env) = Just (S t, env)
+step (S (If (Boolean True) t e), env)  = Just (S t, env)
 step (S (If (Boolean False) t e), env) = Just (S e, env)
 step (S (If c t e), env) = case step (S c, env) of
                             Just (S c', env')   -> Just (S (If c' t e), env')
@@ -142,14 +138,13 @@ eval expr env = case step (S expr, env) of
         Num n     -> NumV n
         Boolean b -> BooleanV b
         Pair f s  -> PairV (Thunk f env) (Thunk s env)
-        Var x     -> lookup x env
     Just (E, env')       -> ErrorV
     Just (T s d, env')   -> Thunk s d
     Just (C f d, env')   -> Closure f d
     Just (S expr', env') -> eval expr' env'
 
 lookup :: String -> [( String , a)] -> a
-lookup s [] = error (" Variable no encontrada :" ++ s )
+lookup s [] = error ("Variable no encontrada: " ++ s )
 lookup s (( k , v) : xs )
                         | s == k = v
                         | otherwise = lookup s xs

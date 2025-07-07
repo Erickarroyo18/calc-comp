@@ -9,8 +9,11 @@ Este directorio contiene el trabajo escrito principal del proyecto, junto con su
 - **`Tesis.pdf`**  
   Documento central del proyecto. Presenta el marco teórico, las definiciones semánticas, los lenguajes desarrollados (`Iris` y `Aλanis`), y el análisis de sus propiedades. Sirve como referencia principal para las implementaciones contenidas en los subdirectorios `/eager`, `/lazy`, `/cbv` y `/cbn`.
 
-- **`apendice.pdf`**  
-  Apéndice técnico con los desarrollos completos correspondientes al lenguaje `Aλanis` (evaluación ansiosa) y al lenguaje `Iris` (evaluación perezosa). Incluye el diseño detallado de los compiladores y de la máquinas virtuales, omitiendo explicaciones conceptuales.
+- **`apendiceAlanis.pdf`**  
+  Apéndice técnico con los desarrollos completos correspondientes al lenguaje `Aλanis` (evaluación ansiosa). Incluye el diseño detallado del compilador y de la máquina de ejecución, omitiendo explicaciones conceptuales.
+
+- **`apendiceIris.pdf`**  
+  Apéndice técnico con los cálculos completos del lenguaje `Iris` (evaluación perezosa), centrado en la presentación operativa y la correspondencia con la semántica estructural.
 
 ---
 

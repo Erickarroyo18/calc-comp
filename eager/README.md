@@ -1,24 +1,24 @@
 
-# Evaluador *Eager*: Semántica Natural y Máquina Abstracta con Call-by-Value
+# Lenguaje Aλanis
 
-Este directorio contiene la primera implementación práctica desarrollada como parte del trabajo escrito (`docs/Tesis.pdf`). El objetivo es modelar un lenguaje funcional con evaluación ansiosa (*eager evaluation*) y paso de parámetros por valor (*call-by-value*), utilizando semántica natural (*big-step semantics*) y una máquina abstracta basada en pila.
+Este directorio contiene la primera implementación práctica desarrollada como parte del trabajo escrito (`docs/Tesis.pdf`). El objetivo es modelar un lenguaje funcional con evaluación ansiosa (*eager evaluation*) y paso de parámetros por valor (*Call-by-Value*), utilizando semántica natural (*big-step semantics*) y una máquina abstracta basada en pila.
 
 ---
 
-## Estructura del Proyecto
+## Estructura del proyecto
 
 - `Eval.hs`: Evaluador directo utilizando semántica natural.
-- `Alanis.hs`: Máquina abstracta y compilador asociado.
+- `Alanis.hs`: Máquina virtual y compilador asociado.
 
 ---
 
-## Descripción Técnica
+## Descripción técnica
 
 ### `Eval.hs`
 
 Este módulo define la semántica del lenguaje mediante evaluación directa sobre ambientes, siguiendo el estilo de semántica natural.
 
-#### Sintaxis Abstracta (`Expr`)
+#### Sintaxis abstracta (`Expr`)
 
 ```haskell
 data Expr
@@ -37,7 +37,7 @@ data Expr
   | App Expr Expr
 ```
 
-#### Valores Semánticos (`Value`)
+#### Valores finales (`Value`)
 
 ```haskell
 data Value
@@ -55,25 +55,34 @@ eval :: Expr -> Env -> Value
 ```
 
 - Implementa la evaluación de expresiones a valores finales.
-- Utiliza un entorno (`Env`) para el manejo de variables.
+- Utiliza un ambiente (`Env`) para el manejo de variables.
 - Los errores de ejecución (como división por cero o variables libres) se propagan mediante el valor `Error`.
 
 ---
 
 ### `Alanis.hs`
 
-Este módulo implementa una máquina abstracta de pila y un compilador que transforma expresiones del lenguaje a código ejecutable.
+Este módulo implementa una máquina virtual de pila y un compilador que transforma expresiones del lenguaje a código ejecutable.
 
-#### Instrucciones de Máquina (`Code`)
+#### Instrucciones de máquina (`Code`)
 
 ```haskell
-data Code
-  = PUSHN Int | PUSHB Bool
-  | ADD | SUB | MUL | DIV | EQ
-  | PAIR | FST
-  | IF Code Code
-  | LAMBDA Code | LOOKUP String
-  | APP | RET | HALT
+data Code = HALT
+          | PUSHN Int Code
+          | PUSHB Bool Code
+          | ADD Code
+          | SUB Code
+          | DIV Code
+          | MUL Code
+          | IF Code Code
+          | EQ Code
+          | PAIR Code
+          | FST Code
+          | LAMBDA String Code
+          | ABS Code Code
+          | LOOKUP String Code
+          | RET
+          | APP CodeLT
 ```
 
 #### Compilador
@@ -92,12 +101,12 @@ comp' :: Expr -> Code -> Code
 exec :: Code -> Conf -> Conf
 ```
 
-- Evalúa instrucciones sobre una configuración (`Conf`) compuesta por una pila de valores y un entorno.
+- Evalúa instrucciones sobre una configuración (`Conf`) compuesta por una pila de valores y un ambiente.
 - Los elementos de la pila (`Elem`) pueden representar valores o cierres.
 
 ---
 
-## Instrucciones de Uso
+## Instrucciones de uso
 
 ### Evaluación directa (semántica natural)
 
@@ -119,7 +128,7 @@ exec :: Code -> Conf -> Conf
 
 ---
 
-### Evaluación mediante máquina abstracta
+### Evaluación mediante máquina virtual
 
 1. Iniciar GHCi:
 
@@ -148,7 +157,7 @@ exec :: Code -> Conf -> Conf
 
 ## Observaciones
 
-- Esta implementación constituye la base para validar experimentalmente la semántica natural con evaluación *call-by-value*.
+- Esta implementación constituye la base para validar experimentalmente la semántica natural con evaluación *Call-by-Value*.
 - El diseño de la máquina abstracta permite modelar explícitamente ambientes y control de flujo, facilitando la extensión hacia estrategias más complejas (como evaluación *lazy*).
 - El código está escrito en *Haskell* (versión 9.6 o superior) y pensado para ejecutarse en GHCi.
 

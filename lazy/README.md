@@ -1,23 +1,23 @@
-# Evaluador Lazy: Semántica Estructural y Máquina Abstracta con Call-by-Name
+# Lenguaje Iris
 
-Este repositorio contiene la segunda implementación de caso de estudio asociada al trabajo de tesis. Se modela un lenguaje con régimen de evaluación perezosa (*lazy evaluation*) y estrategia de paso de parámetros por nombre (*call-by-name*), utilizando una semántica estructural (*small-step semantics*) y una máquina abstracta de pila.
+Este repositorio contiene la segunda implementación de caso de estudio asociada al trabajo de tesis. Se modela un lenguaje con régimen de evaluación perezoso (*lazy evaluation*) y estrategia de paso de parámetros por nombre (*Call-by-Name*), utilizando una semántica estructural (*small-step semantics*) y una máquina virtual de pila.
 
 ---
 
-## Estructura del Proyecto
+## Estructura del proyecto
 
 - `Eval.hs`: Evaluador basado en reducción paso a paso sobre configuraciones de ejecución.
-- `Iris.hs`: Máquina abstracta de pila para evaluación perezosa y compilador asociado.
+- `Iris.hs`: Máquina virtual de pila para evaluación perezosa y compilador asociado.
 
 ---
 
-## Descripción Técnica
+## Descripción técnica
 
 ### `Eval.hs`
 
 Este módulo implementa la evaluación de expresiones mediante una semántica estructural. Modela explícitamente construcciones de evaluación diferida mediante *thunks* y sus forzamientos.
 
-#### Sintaxis Abstracta (`Expr`)
+#### Sintaxis abstracta (`Expr`)
 
 ```haskell
 data Expr
@@ -36,44 +36,54 @@ data Expr
   | App Expr Expr
 ```
 
-#### Valores Semánticos (`Value`)
+#### Valores finales (`Value`)
 
 ```haskell
 data Value
-  = NumV Int
-  | BooleanV Bool
-  | PairV Value Value
-  | Closure Expr Env
-  | Thunk Expr Env
-  | ErrorV
+   = NumV Int
+   | BooleanV Bool
+   | PairV Value Value
+   | Closure Expr Env
+   | Thunk Expr Env
+   | ErrorV
 ```
 
-#### Modelo de Evaluación
+#### Modelo de evaluación
 
 - `Config`: configuración de ejecución compuesta por una expresión en tiempo de ejecución (`RTExpr`) y un entorno (`Env`).
 - `RTExpr`: incluye formas activas de evaluación como suspensiones (`T`), forzamientos (`F`), cierres (`C`), y expresiones evaluadas (`S`).
 - `step :: Config -> Maybe Config`: realiza un paso de reducción sobre una configuración.
-- `eval :: Expr -> Env -> Value`: evalúa expresiones mediante la aplicación sucesiva de pasos pequeños hasta llegar a un valor terminal.
+- `eval :: Expr -> Env -> Value`: evalúa expresiones mediante la aplicación sucesiva de pasos pequeños hasta llegar a un valor canónico.
 
-La implementación refleja el comportamiento de *call-by-name* con suspensiones diferidas que solo se evalúan cuando es necesario.
+La implementación refleja el comportamiento de *Call-by-Name* con suspensiones diferidas que solo se evalúan cuando es necesario.
 
 ---
 
 ### `Iris.hs`
 
-Este módulo define una máquina abstracta orientada a evaluación perezosa, siguiendo la misma semántica estructural de `Eval.hs`.
+Este módulo define una máquina virtual orientada a evaluación perezosa, siguiendo la misma semántica estructural de `Eval.hs`.
 
-#### Instrucciones de Máquina (`Code`)
+#### Instrucciones de máquina (`Code`)
 
 ```haskell
-data Code
-  = PUSHN Int | PUSHB Bool
-  | ADD | SUB | MUL | DIV | EQ
-  | PAIR | FST
-  | IF Code Code
-  | LAMBDA Code | LOOKUP String
-  | APP | RET
-  | FORCE | CEV | HALT
+data Code = HALT
+          | PUSHN Int Code
+          | PUSHB Bool Code
+          | LOOKUP String Code
+          | ADD Code
+          | SUB Code
+          | MUL Code
+          | DIV Code
+          | EQ Code
+          | IF Code Code
+          | FORCE Code
+          | CEV
+          | RET
+          | FST Code
+          | PAIR Code Code Code
+          | ABS Code Code
+          | LAMBDA String Code
+          | APP Code Code
 ```
 
 #### Compilador
@@ -86,11 +96,11 @@ comp' :: Expr -> Code -> Code
 - `comp` traduce expresiones a código de máquina.
 - `comp'` permite la construcción incremental del código usando continuaciones.
 
-#### Modelo de Ejecución
+#### Modelo de ejecución
 
 - `Conf = (Stack, Env)`: la configuración consta de una pila de evaluación y un entorno.
   - `Stack`: contiene elementos `Elem`, que pueden ser valores, cierres o thunks.
-  - `Env`: ambiente de ejecución con asociaciones entre variables y valores diferidos.
+  - `Env`: ambiente de evaluación con asociaciones entre variables y valores diferidos.
 
 ```haskell
 exec :: Code -> Conf -> Conf
@@ -102,9 +112,9 @@ La máquina de `Iris` proporciona un modelo claro y controlado de evaluación di
 
 ---
 
-## Instrucciones de Compilación y Uso
+## Instrucciones de compilación y uso
 
-### Evaluador Estructural (`Eval.hs`)
+### Evaluador (`Eval.hs`)
 
 1. Iniciar GHCi e importar el módulo:
 
@@ -128,7 +138,7 @@ La máquina de `Iris` proporciona un modelo claro y controlado de evaluación di
 
 ---
 
-### Máquina Abstracta (`Iris.hs`)
+### Máquina virtual (`Iris.hs`)
 
 1. Iniciar GHCi:
 
@@ -158,9 +168,9 @@ La máquina de `Iris` proporciona un modelo claro y controlado de evaluación di
 
 ## Observaciones
 
-Esta implementación permite validar de manera operativa el modelo teórico de evaluación *lazy*, mediante la reducción estructural controlada y el uso de *thunks*. La separación entre suspensiones y forzamientos permite simular con precisión el comportamiento de *call-by-name*, y facilita la observación del orden de evaluación y su impacto.
+Esta implementación permite validar de manera operativa el modelo teórico de evaluación *lazy*, mediante la reducción estructural controlada y el uso de *thunks*. La separación entre suspensiones y forzamientos permite simular con precisión el comportamiento de *Call-by-Name*, y facilita la observación del orden de evaluación y su impacto.
 
-Comparado con la versión *eager*, esta variante introduce una abstracción más compleja en la gestión del entorno y de la pila, orientada al diferimiento explícito de cómputo.
+Comparado con la versión *eager*, esta variante introduce una abstracción más compleja en la gestión del ambiente y de la pila, orientada al diferimiento explícito de cómputo.
 
 ---
 

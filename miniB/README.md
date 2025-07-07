@@ -1,10 +1,10 @@
-# MiniB: Evaluación de Expresiones Booleanas con Máquina Virtual
+# Lenguaje MiniB
 
 Este directorio presenta un minilenguaje de expresiones booleanas como parte del marco teórico de la tesis. Se incluye su evaluador directo, un compilador y una máquina virtual basada en pila, construidos mediante el proceso de cálculo de compiladores.
 
 ---
 
-## Contenido del Directorio
+## Contenido del directorio
 
 - **`Eval.hs`**  
   Evaluador semántico directo para expresiones booleanas.
@@ -14,7 +14,7 @@ Este directorio presenta un minilenguaje de expresiones booleanas como parte del
 
 ---
 
-## Descripción Técnica
+## Descripción técnica
 
 ### `Eval.hs`
 
@@ -51,7 +51,7 @@ Este diseño ilustra el ciclo completo de interpretación, compilación y ejecuc
 
 ---
 
-## Instrucciones de Compilación y Uso
+## Instrucciones de compilación y uso
 
 ### Evaluador directo (`Eval.hs`)
 
