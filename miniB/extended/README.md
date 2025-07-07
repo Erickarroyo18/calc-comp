@@ -16,7 +16,7 @@ Este subdirectorio extiende el lenguaje `MiniB` incorporando un analizador sint�
   Máquina virtual basada en pila y compilador de expresiones booleanas en su forma básica.
 
 - **`Extended.hs`**  
-  Encapsula todo el flujo de ejecución: análisis léxico, parsing, desazucarado, compilación y evaluación. Define la función principal `run :: String -> [Bool]`.
+  Encapsula todo el flujo de ejecución: análisis léxico, parsing, desazucarado, compilación y evaluación. Define la función principal `run :: String -> Bool`.
 
 - **`Desugar.hs`**  
   Implementa la transformación de expresiones con operadores extendidos a expresiones canónicas del lenguaje base.
@@ -28,14 +28,14 @@ Este subdirectorio extiende el lenguaje `MiniB` incorporando un analizador sint�
 El módulo `Desugar.hs` define la función:
 
 ```haskell
-desugar :: CST -> Expr
+desugar :: ASAS -> Expr
 ```
 
 que convierte expresiones con operadores extendidos a una forma normal compuesta exclusivamente por negación (`¬`), conjunción (`∧`) y disyunción (`∨`).
 
 **Reglas de desazucarado** (Sección 2.4.2. del trabajo escrito):
 
-- `desugar(True) = True`
+- `desugar(True)  = True`
 - `desugar(False) = False`
 - `desugar(not A) =  desugar(A)`
 - `desugar(A ∧ B) = desugar(A) ∧ desugar(B)`
@@ -55,7 +55,10 @@ Estas transformaciones preservan la semántica clásica de las expresiones, perm
 ```bash
 ghci Extended.hs
 ```
-
+Opcionalmente
+```bash
+ghci -package array Extended.hs
+```
 2. Evaluar una expresión:
 ```haskell
 ghci> run "(True <=> (False => (not True)))"

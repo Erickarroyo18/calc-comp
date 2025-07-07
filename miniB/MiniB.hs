@@ -1,6 +1,5 @@
 module MiniB where
 
-
 data Expr = Val Bool 
           | Not Expr 
           | And Expr Expr 

@@ -132,13 +132,13 @@ happyReduction_1 _  = notHappyAtAll
 happyReduce_2 = happySpecReduce_1  5 happyReduction_2
 happyReduction_2 _
 	 =  HappyAbsSyn5
-		 (BooleanE True
+		 (BooleanS True
 	)
 
 happyReduce_3 = happySpecReduce_1  5 happyReduction_3
 happyReduction_3 _
 	 =  HappyAbsSyn5
-		 (BooleanE False
+		 (BooleanS False
 	)
 
 happyReduce_4 = happyReduce 4 5 happyReduction_4
@@ -148,7 +148,7 @@ happyReduction_4 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (NotE happy_var_3
+		 (NotS happy_var_3
 	) `HappyStk` happyRest
 
 happyReduce_5 = happyReduce 5 5 happyReduction_5
@@ -159,7 +159,7 @@ happyReduction_5 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (AndE happy_var_2 happy_var_4
+		 (AndS happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_6 = happyReduce 5 5 happyReduction_6
@@ -170,7 +170,7 @@ happyReduction_6 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (OrE happy_var_2 happy_var_4
+		 (OrS happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_7 = happyReduce 5 5 happyReduction_7
@@ -181,7 +181,7 @@ happyReduction_7 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (ImpliesE happy_var_2 happy_var_4
+		 (ImpliesS happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_8 = happyReduce 5 5 happyReduction_8
@@ -192,7 +192,7 @@ happyReduction_8 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn5
-		 (IffE happy_var_2 happy_var_4
+		 (EquivS happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyNewToken action sts stk [] =
@@ -248,13 +248,13 @@ happySeq = happyDontSeq
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
--- AST para lógica proposicional en notación prefija
-data CST = BooleanE Bool
-         | NotE CST
-         | AndE CST CST
-         | OrE CST CST
-         | ImpliesE CST CST
-         | IffE CST CST
+-- srcASA para lógica proposicional en notación prefija
+data ASAS = BooleanS Bool
+         | NotS ASAS
+         | AndS ASAS ASAS
+         | OrS ASAS ASAS
+         | ImpliesS ASAS ASAS
+         | EquivS ASAS ASAS
          deriving (Show)
 
 data Token = TokenTrue
@@ -269,18 +269,18 @@ data Token = TokenTrue
            deriving (Show)
 
 lexer :: String -> [Token]
-lexer [] = []
-lexer (' ' : xs) = lexer xs
-lexer ('(' : xs) = TokenPA : lexer xs
-lexer (')' : xs) = TokenPC : lexer xs
-lexer ('T':'r':'u':'e':xs) = TokenTrue : lexer xs
+lexer []                       = []
+lexer (' ' : xs)               = lexer xs
+lexer ('(' : xs)               = TokenPA : lexer xs
+lexer (')' : xs)               = TokenPC : lexer xs
+lexer ('T':'r':'u':'e':xs)     = TokenTrue : lexer xs
 lexer ('F':'a':'l':'s':'e':xs) = TokenFalse : lexer xs
-lexer ('n':'o':'t':xs) = TokenNot : lexer xs
-lexer ('a':'n':'d':xs) = TokenAnd : lexer xs
-lexer ('o':'r':xs) = TokenOr : lexer xs
-lexer ('=':'>':xs) = TokenImplies : lexer xs
-lexer ('<':'=':'>':xs) = TokenIff : lexer xs
-lexer _ = error "Unknown token"
+lexer ('n':'o':'t':xs)         = TokenNot : lexer xs
+lexer ('a':'n':'d':xs)         = TokenAnd : lexer xs
+lexer ('o':'r':xs)             = TokenOr : lexer xs
+lexer ('=':'>':xs)             = TokenImplies : lexer xs
+lexer ('<':'=':'>':xs)         = TokenIff : lexer xs
+lexer _                         = error "Unknown token"
 
 main = getContents >>= print . parse . lexer
 {-# LINE 1 "templates/GenericTemplate.hs" #-}

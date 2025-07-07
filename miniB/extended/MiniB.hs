@@ -1,6 +1,5 @@
 module MiniB where
-
-
+    
 data Expr = Val Bool 
           | Not Expr 
           | And Expr Expr 
@@ -29,4 +28,4 @@ exec HALT s          = s
 exec (PUSH n c) s    = exec c ( n : s)
 exec (NOT c) (b:s)   = exec c (not b : s)
 exec (AND c) (m:n:s) = exec c ((n && m) : s )
-exec (OR c) (m:n:s) = exec c ((n || m) : s )
+exec (OR c) (m:n:s)  = exec c ((n || m) : s )
