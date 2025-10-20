@@ -91,3 +91,6 @@ testSumSquares = "(Rec sumSq (Lambda n (if (= n 0) 0 (+ (* n n) (sumSq (- n 1)))
 -- Número triangular n(n+1)/2
 testTriangular :: String
 testTriangular = "(Rec tri (Lambda n (if (= n 0) 0 (+ n (tri (- n 1))))) (tri 5))"
+
+-- Recursión de cola
+testFactTCO = "(Rec fact (Lambda n (Lambda acc (if (= n 0) acc ((fact (- n 1)) (* n acc))))) ((fact 5) 1))"
